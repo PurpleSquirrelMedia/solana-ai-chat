@@ -409,10 +409,15 @@ export class SolanaToolExecutor {
   }
 
   async getNFTs(address: string, limit: number = 10): Promise<string> {
-    // Using Helius DAS API (free tier available)
+    // Using Helius DAS API - requires HELIUS_API_KEY env variable
+    const heliusApiKey = process.env.HELIUS_API_KEY || process.env.EXPO_PUBLIC_HELIUS_API_KEY;
+    if (!heliusApiKey) {
+      return JSON.stringify({ error: 'HELIUS_API_KEY not configured' });
+    }
+
     try {
       const response = await fetch(
-        `https://mainnet.helius-rpc.com/?api-key=15319bf4-5b40-4958-ac8d-6313aa55eb92`,
+        `https://mainnet.helius-rpc.com/?api-key=${heliusApiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
